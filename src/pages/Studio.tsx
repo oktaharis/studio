@@ -35,7 +35,7 @@ const Studio = () => {
     <div className="min-h-screen bg-gradient-subtle">
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-sticky">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto py-4">
           <div className="flex items-center justify-between mb-4">
             <Button variant="ghost" onClick={handleBack} className="flex items-center gap-2">
               <ArrowLeft className="h-5 w-5" />
@@ -52,7 +52,7 @@ const Studio = () => {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto py-8">
         {currentStep === 1 && (
           <div className="space-y-6">
             <div className="text-center space-y-4">
@@ -111,7 +111,7 @@ const Studio = () => {
             
             {/* Fixed Bottom Action Bar */}
             <div className="fixed bottom-0 left-0 right-0 z-fixed bg-background/95 backdrop-blur-sm border-t shadow-lg">
-              <div className="container mx-auto px-4 py-4">
+              <div className="container mx-auto py-4">
                 <StudioToolbar onBack={handleBack} />
               </div>
             </div>
