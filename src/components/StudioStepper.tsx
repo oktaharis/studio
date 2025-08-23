@@ -63,40 +63,27 @@ export const StudioStepper = ({ compact = false }: StudioStepperProps) => {
       aria-valuemax={3}
       aria-label="Photo creation progress"
     >
-      {/* Mobile-first: stack vertically on small screens, horizontal on larger */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-md mx-auto gap-4 sm:gap-0">
+      {/* Mobile-first: horizontal layout on all screen sizes */}
+      <div className="flex flex-row items-center justify-between max-w-md mx-auto gap-0">
         {steps.map((step, index) => (
-          <div key={step.id} className="flex items-center w-full sm:w-auto">
+          <div key={step.id} className="flex items-center w-auto">
             <StepItem
               step={step}
               isComplete={isStepComplete(step.id)}
               isActive={isStepActive(step.id)}
             />
             
-            {/* Connector Line - Responsive: vertical on mobile, horizontal on desktop */}
+            {/* Connector Line - Always horizontal */}
             {index < steps.length - 1 && (
-              <>
-                {/* Mobile: vertical connector */}
-                <div
-                  className={cn(
-                    "sm:hidden ml-4 w-px h-6 transition-colors",
-                    isStepComplete(step.id)
-                      ? "bg-success"
-                      : "bg-muted-foreground/30"
-                  )}
-                  aria-hidden="true"
-                />
-                {/* Desktop: horizontal connector */}
-                <div
-                  className={cn(
-                    "hidden sm:block mx-2 md:mx-4 h-px w-6 md:w-8 transition-colors",
-                    isStepComplete(step.id)
-                      ? "bg-success"
-                      : "bg-muted-foreground/30"
-                  )}
-                  aria-hidden="true"
-                />
-              </>
+              <div
+                className={cn(
+                  "mx-2 md:mx-4 h-px w-6 md:w-8 transition-colors",
+                  isStepComplete(step.id)
+                    ? "bg-success"
+                    : "bg-muted-foreground/30"
+                )}
+                aria-hidden="true"
+              />
             )}
           </div>
         ))}

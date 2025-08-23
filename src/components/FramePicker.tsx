@@ -38,7 +38,7 @@ const FramePicker = ({ onFrameSelect }: FramePickerProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto space-y-6">
       {/* Mobile-first: single column on mobile, grid on larger screens */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
         {FRAME_ASSETS.map((frame) => (

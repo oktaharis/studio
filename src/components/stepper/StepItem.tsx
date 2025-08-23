@@ -59,7 +59,7 @@ export const StepItem = ({ step, isComplete, isActive, compact = false }: StepIt
       <div className="ml-2 flex flex-col">
         <span
           className={cn(
-            "text-xs font-medium transition-colors",
+            "text-xs sm:text-sm font-medium transition-colors",
             isActive || isComplete
               ? "text-foreground"
               : "text-muted-foreground"

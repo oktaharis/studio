@@ -10,7 +10,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-subtle">
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-sticky">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="container mx-auto py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 bg-gradient-primary rounded-lg flex items-center justify-center">
               <Layers className="h-5 w-5 text-primary-foreground" />
@@ -36,7 +36,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="py-20 lg:py-32">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
@@ -80,7 +80,7 @@ const Index = () => {
 
       {/* Features Section */}
       <section id="features" className="py-20 bg-background">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold">Powerful Features</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -129,7 +129,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-subtle">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto">
           <Card variant="ghost" className="bg-gradient-primary text-primary-foreground">
             <CardContent className="py-16 text-center">
               <h2 className="text-3xl lg:text-4xl font-bold mb-4">
@@ -151,7 +151,7 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t bg-background py-12">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
