@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Camera, ZoomIn, Palette } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import { ArrowLeft, Camera, Palette } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import { useStudioStore } from "@/stores/useStudioStore"
+import { useStudioSteps } from "@/hooks/useStudioSteps"
 import CameraView from "@/components/CameraView"
 import CanvasComposer from "@/components/CanvasComposer"
 import FramePicker from "@/components/FramePicker"
@@ -10,32 +11,9 @@ import { StudioStepper } from "@/components/StudioStepper"
 import { StudioToolbar } from "@/components/StudioToolbar"
 
 const Studio = () => {
-  const { mode, frameSrc, photoDataUrl, leftPhotoDataUrl, rightPhotoDataUrl, reset } = useStudioStore();
+  const { mode, reset } = useStudioStore();
   const navigate = useNavigate();
-
-  const getCurrentStep = () => {
-    if (!frameSrc) return 1;
-    
-    if (mode === 'portrait') {
-      if (!photoDataUrl) return 2;
-      return 3;
-    } else {
-      // Landscape mode - need both photos
-      if (!rightPhotoDataUrl) return 2; // First capture for right slot
-      if (!leftPhotoDataUrl) return 2; // Second capture for left slot
-      return 3;
-    }
-  };
-
-  const getCurrentCaptureSlot = () => {
-    if (mode === 'portrait') return 'single';
-    if (!rightPhotoDataUrl) return 'right';
-    if (!leftPhotoDataUrl) return 'left';
-    return 'complete';
-  };
-
-  const currentStep = getCurrentStep();
-  const captureSlot = getCurrentCaptureSlot();
+  const { currentStep, captureSlot } = useStudioSteps();
 
   const handleBack = () => {
     if (currentStep === 3) {
@@ -112,7 +90,7 @@ const Studio = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
-              <CameraView className="w-full" captureSlot={captureSlot} />
+              <CameraView className="w-full" captureSlot={captureSlot as any} />
             </CardContent>
           </Card>
         )}

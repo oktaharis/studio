@@ -1,15 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "@/components/ui/toolbar";
-import { ArrowLeft, ZoomIn, ZoomOut, RotateCcw, Download, Smartphone, Monitor } from "lucide-react";
+import { ArrowLeft, RotateCcw, Download, Smartphone } from "lucide-react";
 import { useStudioStore } from "@/stores/useStudioStore";
 import { exportImage } from "@/lib/exportImage";
 import { toast } from "@/hooks/use-toast";
+import { ToolbarZoomControls } from "./toolbar/ToolbarZoomControls";
 
 interface StudioToolbarProps {
   onBack?: () => void;
+  onSave?: () => void;
 }
 
-export const StudioToolbar = ({ onBack }: StudioToolbarProps) => {
+export const StudioToolbar = ({ onBack, onSave }: StudioToolbarProps) => {
   const { 
     mode, 
     frameSrc, 
@@ -76,7 +78,6 @@ export const StudioToolbar = ({ onBack }: StudioToolbarProps) => {
           quality: 0.9
         });
       } else {
-        // For landscape, we'll need to update exportImage to handle dual photos
         await exportImage(rightPhotoDataUrl!, frameSrc, mode, rightZoom, rightOffset, {
           format: 'png',
           quality: 0.9,
@@ -91,6 +92,8 @@ export const StudioToolbar = ({ onBack }: StudioToolbarProps) => {
         description: "Your photo has been downloaded successfully",
         variant: "default",
       });
+
+      onSave?.();
     } catch (error) {
       toast({
         title: "Export Failed",
@@ -107,92 +110,68 @@ export const StudioToolbar = ({ onBack }: StudioToolbarProps) => {
   };
 
   return (
-    <Toolbar 
-      className="bg-background/95 backdrop-blur-sm border shadow-md flex-wrap gap-1 p-2 sm:p-1 sm:gap-1"
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="toolbar"
-      aria-label="Photo editing toolbar"
-    >
-      <ToolbarItem>
+    <div className="bg-background/95 backdrop-blur-sm border shadow-md rounded-lg">
+      {/* Mobile-first: stack controls vertically on small screens */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-3">
+        {/* Back button - always visible */}
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={onBack}
-          className="shrink-0"
+          className="shrink-0 justify-start sm:justify-center"
           aria-label="Go back to previous step"
         >
           <ArrowLeft className="h-4 w-4 sm:mr-2" />
+          <span className="sm:hidden ml-2">Back</span>
           <span className="hidden sm:inline">Back</span>
         </Button>
-      </ToolbarItem>
-      
-      <ToolbarSeparator className="hidden sm:block" />
-      
-      <ToolbarItem className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleZoomOut}
-          disabled={currentZoom <= 1}
-          aria-label="Zoom out"
-          title="Zoom out (-)"
-        >
-          <ZoomOut className="h-4 w-4" />
-        </Button>
         
-        <span className="text-sm text-muted-foreground min-w-[3rem] text-center px-2">
-          {Math.round(currentZoom * 100)}%
-        </span>
+        <div className="hidden sm:block w-px h-6 bg-border" />
         
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleZoomIn}
-          disabled={currentZoom >= 3}
-          aria-label="Zoom in"
-          title="Zoom in (+)"
-        >
-          <ZoomIn className="h-4 w-4" />
-        </Button>
-      </ToolbarItem>
-      
-      <ToolbarSeparator className="hidden sm:block" />
-      
-      <ToolbarItem>
+        {/* Zoom controls */}
+        <ToolbarZoomControls
+          currentZoom={currentZoom}
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+        />
+        
+        <div className="hidden sm:block w-px h-6 bg-border" />
+        
+        {/* Reset button */}
         <Button 
           variant="outline" 
           size="sm" 
           onClick={handleReset}
           aria-label="Reset position and zoom"
           title="Reset (0)"
+          className="justify-start sm:justify-center"
         >
           <RotateCcw className="h-4 w-4 sm:mr-2" />
+          <span className="sm:hidden ml-2">Reset</span>
           <span className="hidden sm:inline">Reset</span>
         </Button>
-      </ToolbarItem>
-      
-      <ToolbarSeparator className="hidden sm:block" />
-      
-      <ToolbarItem>
+        
+        <div className="hidden sm:block w-px h-6 bg-border" />
+        
+        {/* Save button */}
         <Button 
           variant="gradient" 
           size="sm" 
           onClick={handleSave}
           aria-label="Save and download photo"
-          className="shrink-0"
+          className="shrink-0 justify-start sm:justify-center"
         >
           <Download className="h-4 w-4 sm:mr-2" />
+          <span className="sm:hidden ml-2">Save Photo</span>
           <span className="hidden sm:inline">Save</span>
         </Button>
-      </ToolbarItem>
 
-      {/* Mobile indicator */}
-      <ToolbarItem className="sm:hidden ml-auto">
-        <div className="flex items-center text-xs text-muted-foreground">
-          <Smartphone className="h-3 w-3" />
+        {/* Mobile indicator */}
+        <div className="sm:hidden flex items-center justify-center text-xs text-muted-foreground py-1">
+          <Smartphone className="h-3 w-3 mr-1" />
+          Mobile View
         </div>
-      </ToolbarItem>
-    </Toolbar>
+      </div>
+    </div>
   );
 };
