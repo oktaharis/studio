@@ -104,7 +104,43 @@ export const useCameraLogic = ({ captureSlot = 'single', onCapture, onRetake }: 
       return;
     }
 
-    // Left/single slot: capture full frame
+    // Left slot: crop to CAMERA_OVERLAYS.left area (same pattern as right)
+    if (captureSlot === 'left') {
+      if (!stage) return;
+
+      // Use the same overlay that's displayed in UI
+      const disp = getDisplayedVideoRect(video, stage);
+      const srPx = safeToPx(CAMERA_OVERLAYS.left, stage.clientWidth, stage.clientHeight);
+      let { sx, sy, sw, sh } = containerPxToVideoPx(srPx, disp, mirrored, video.videoWidth);
+
+      // Clamp to source dimensions
+      const maxW = video.videoWidth, maxH = video.videoHeight;
+      sx = Math.max(0, Math.min(sx, maxW));
+      sy = Math.max(0, Math.min(sy, maxH));
+      sw = Math.max(1, Math.min(sw, maxW - sx));
+      sh = Math.max(1, Math.min(sh, maxH - sy));
+
+      const out = document.createElement('canvas');
+      out.width = Math.round(sw);
+      out.height = Math.round(sh);
+      const octx = out.getContext('2d')!;
+
+      if (mirrored) {
+        octx.translate(out.width, 0);
+        octx.scale(-1, 1);
+      }
+
+      octx.drawImage(video, sx, sy, sw, sh, 0, 0, out.width, out.height);
+
+      const dataUrl = out.toDataURL('image/jpeg', 0.92);
+      setLeftPhotoDataUrl(dataUrl);
+      setLeftZoom(1);
+      setLeftOffset({ x: 0, y: 0 });
+      onCapture?.(dataUrl);
+      return;
+    }
+
+    // Single slot: capture full frame (keep existing behavior)
     const out = document.createElement('canvas');
     out.width = video.videoWidth;
     out.height = video.videoHeight;
@@ -118,15 +154,9 @@ export const useCameraLogic = ({ captureSlot = 'single', onCapture, onRetake }: 
     octx.drawImage(video, 0, 0, out.width, out.height);
     const dataUrl = out.toDataURL('image/jpeg', 0.92);
 
-    if (captureSlot === 'left') {
-      setLeftPhotoDataUrl(dataUrl);
-      setLeftZoom(1);
-      setLeftOffset({ x: 0, y: 0 });
-    } else {
-      setPhotoDataUrl(dataUrl);
-      setZoom(1);
-      setOffset({ x: 0, y: 0 });
-    }
+    setPhotoDataUrl(dataUrl);
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
     onCapture?.(dataUrl);
   };
 
